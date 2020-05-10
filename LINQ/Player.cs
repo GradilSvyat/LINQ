@@ -19,18 +19,14 @@ namespace LINQ
 
         readonly string Name;
         readonly DateTime Birthday;
-        int Age;
+        readonly int Age;
 
         public static IEnumerable<Player> ReadStartString (string startString)
         {
-            List<Player> players = new List<Player>();
-            string [] playersInString = startString.Split("; ");
-            foreach (var item in playersInString)
-            {
-                string[] nameAndDate = item.Split(", ");
-                players.Add(new Player(nameAndDate.First(), DateTime.Parse(nameAndDate.Last())));
-            }
-            return (IEnumerable<Player>)players.OrderBy(p => p.Age);
+            IEnumerable<Player> players = (from t in startString.Split("; ")
+                                           let player = t.Split(", ")
+                                           select new Player(player.First(), DateTime.Parse(player.Last())));
+            return players.OrderBy(p => p.Age);
         }
 
         public static void ShowPlayers (IEnumerable<Player> players)
